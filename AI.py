@@ -20,6 +20,7 @@ def prtNum(src):
         print()
 
 
+
 # 判断两个数码序列之间的差别，完全相同返回0，有一个字符不相同则返回值+1
 def diff(src, dst):
     total = 0
@@ -31,7 +32,7 @@ def diff(src, dst):
 
 # 返回一个序列中空‘’在序列中的位置，以及在3x3阵列中的行、列位置。
 def position(src):
-    flag = src.index(' ')
+    flag = src.index('0')
     row = int(flag / 3)
     col = int(flag % 3)
     return [flag, row, col]
@@ -92,37 +93,35 @@ def handleOpen():
     while True:
         if len(open) == 0:
             break
-        # v1.1修改
         x = 0
-        #        for x in range(len(open)):
         tmpOpen = open[0]
 
         tmp = move(open[0][0], '')
-        #          print(tmp)
-        #          print(open)
-        #          print('tmp length is',len(tmp))
+        #print('TMP=',tmp)
+        #print('OPEN=',open)
+        #print('tmp length is',len(tmp))
         for y in range(len(tmp)):
             flag = False
             for jj in range(len(open)):
-                #                        print('tmp[y][0]is',tmp[y][0])
-                #                        print('open[x][0]is',open[x][0])
+                #print('tmp[y][0]is',tmp[y][0])
+                #print('open[x][0]is',open[x][0])
                 if tmp[y][0] == open[jj][0]:
                     flag = True
-            #                                print('falg open set to True')
+                    #print('falg open set to True')
             for kk in range(len(closed)):
-                #                         print('tmp[',y,'][0]is',tmp[y][0])
-                #                         print('closed[',kk,'][0]is',closed[kk][0])
+                #print('tmp[',y,'][0]is',tmp[y][0])
+                #print('closed[',kk,'][0]is',closed[kk][0])
                 if tmp[y][0] == closed[kk][0]:
                     flag = True
-            #                                print('falg close set to True')
+                    #print('falg close set to True')
             if flag == False:
                 # V1.1 修改
                 #                        open.append([tmp[y][0],tmp[y][1],tmp[y][2],tmp[y][3],open[x][3]])
                 addOpen([tmp[y][0], tmp[y][1], tmp[y][2], tmp[y][3], open[x][3]])
 
-            #                        print('add open node',open[-1])
-            #                  else:
-            #                        print('node',tmp[y][0], 'already exists in open or closed!')
+                #print('add open node',open[-1])
+            #else:
+                #print('node',tmp[y][0], 'already exists in open or closed!')
 
             if tmp[y][2] == 0:
                 # V1.0
@@ -134,7 +133,7 @@ def handleOpen():
                 closed.append(tmpOpen)
                 closed.append(open[0])
                 open.remove(open[0])
-                #                    print('add close node',open[x])
+                #print('add close node',open[x])
 
                 print('Totally', nodeid, 'nodes ayalyzed,find the result.')
                 prtResult()
@@ -143,7 +142,7 @@ def handleOpen():
         # V1.0          closed.append(open[x])
         # V1.1
         closed.append(tmpOpen)
-        #          print('add close node',open[x])
+        #print('add close node',open[x])
         # v1.0      open.remove(open[x])
         # V1.1
         open.remove(tmpOpen)
@@ -163,6 +162,7 @@ def addOpen(node):
 def move(src, side):
     global crt
     global nodeid
+    #global op
     pos = position(src)
     flag = pos[0]
     x = pos[1]
@@ -224,6 +224,7 @@ def move(src, side):
             #        return(crtDown,src,downDiff)
             nodeid = nodeid + 1
             rtResult.append([crtDown, src, downDiff, nodeid])
+
     #      else:
     #        print('Cannot move to DOWN!')
     if nodeid % 1000 >= 0 and nodeid % 1000 < 3:
@@ -237,6 +238,8 @@ def move(src, side):
 def prtResult():
     step = [closed[-1]]
     nodePrt = closed[-1][4]
+    pos0 = [999]
+    operations = ''
     while True:
         for x in range(len(closed)):
             if nodePrt == closed[x][3]:
@@ -247,8 +250,19 @@ def prtResult():
     for x in range(len(step)):
         print('Step', x, ':')
         prtNum(step[x][0])
-    print('Finished!')
-    time.sleep(10)
+        #print(step[x][0])
+        for i in range(9):
+            if(step[x][0][i] == '0'):
+                pos0.append(i)
+        print(pos0)
+    for k in range(len(step)):
+        if (pos0[k+1]-pos0[k]==1):      operations = operations + 'd'
+        elif(pos0[k+1]-pos0[k]==-1):    operations = operations + 'a'
+        elif(pos0[k+1]-pos0[k]==-3):    operations = operations + 'w'
+        elif(pos0[k+1]-pos0[k]==3):     operations = operations + 's'
+        else:   operations = operations + ''
+    print('Finished!+',operations)
+    #time.sleep(10)
 
 open = []
 
@@ -258,23 +272,20 @@ nodeid = 1
 
 # 主程序
 # 输入初始和目标序列，并打印出来供确认，如不正确可重新输入
-while True:
-    print('Please input Original state:', end='\t')
-    tmp = input()
-    numberOrig = [tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5], tmp[6], tmp[7], tmp[8]]
-    print('Please input Final state:', end='\t')
-    tmp = input()
-    numberFinal = [tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5], tmp[6], tmp[7], tmp[8]]
-    print('Orig is')
-    prtNum(numberOrig)
-    #        print('Orig judge is',judge(numberOrig))
-    print('Final is')
-    prtNum(numberFinal)
-    #        print('Final judge is',judge(numberFinal))
-    print('Is it correct?', end='\t')
-    confirm = input()
-    if confirm == 'y':
-        break
+
+print('Please input Original state:', end='\t')
+tmp = input()
+numberOrig = [tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5], tmp[6], tmp[7], tmp[8]]
+print('Please input Final state:', end='\t')
+tmp = input()
+numberFinal = [tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5], tmp[6], tmp[7], tmp[8]]
+print('Orig is')
+prtNum(numberOrig)
+#        print('Orig judge is',judge(numberOrig))
+print('Final is')
+prtNum(numberFinal)
+#        print('Final judge is',judge(numberFinal))
+
 # 如果初始和目标序列的判定值奇偶性一致，则存在解，开始处理
 if (judge(numberOrig) + judge(numberFinal)) % 2 == 0:
     print('Have answer! Orig is ', judge(numberOrig), ', Final is', judge(numberFinal))
