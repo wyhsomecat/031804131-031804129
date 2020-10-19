@@ -1,15 +1,4 @@
-# 名称：八数码问题算法
-# 用途：输入八数码初始状态和预期状态，搜索其解
-# 节点基本序列：字符0-8，以及字符' '。
-# 节点数据结构：本节点序列、父节点序列、本节点与目标的偏差、本节点ID、父节点ID
-# 其中节点ID为全局唯一。
-#
-# 版本：1.0
-# 更新日期：2018.11.19
-# 实现方式：采用A算法，广度优先方式
 import copy
-import os
-import time
 
 
 # 将一个八数码序列用3x3的阵列打印出来
@@ -18,7 +7,6 @@ def prtNum(src):
         for y in range(3):
             print(str(src[x * 3 + y] + ' '), end='')
         print()
-
 
 
 # 判断两个数码序列之间的差别，完全相同返回0，有一个字符不相同则返回值+1
@@ -57,7 +45,6 @@ def exchange(src, x, y, x2, y2):
 # 1234 5678的flag()之和为:0, 其可以转换为12345 678，flag()之和
 # 也为0，因此互相可以转化。
 # 本函数初始化序列后，返回某个序列的flag（）之和。
-#
 
 def judge(number):
     total = 0
@@ -97,55 +84,41 @@ def handleOpen():
         tmpOpen = open[0]
 
         tmp = move(open[0][0], '')
-        #print('TMP=',tmp)
-        #print('OPEN=',open)
-        #print('tmp length is',len(tmp))
+        # print('TMP=',tmp)
+        # print('OPEN=',open)
+        # print('tmp length is',len(tmp))
         for y in range(len(tmp)):
             flag = False
             for jj in range(len(open)):
-                #print('tmp[y][0]is',tmp[y][0])
-                #print('open[x][0]is',open[x][0])
+                # print('tmp[y][0]is',tmp[y][0])
+                # print('open[x][0]is',open[x][0])
                 if tmp[y][0] == open[jj][0]:
                     flag = True
-                    #print('falg open set to True')
+                    # print('falg open set to True')
             for kk in range(len(closed)):
-                #print('tmp[',y,'][0]is',tmp[y][0])
-                #print('closed[',kk,'][0]is',closed[kk][0])
+                # print('tmp[',y,'][0]is',tmp[y][0])
+                # print('closed[',kk,'][0]is',closed[kk][0])
                 if tmp[y][0] == closed[kk][0]:
                     flag = True
-                    #print('falg close set to True')
+                    # print('falg close set to True')
             if flag == False:
-                # V1.1 修改
-                #                        open.append([tmp[y][0],tmp[y][1],tmp[y][2],tmp[y][3],open[x][3]])
                 addOpen([tmp[y][0], tmp[y][1], tmp[y][2], tmp[y][3], open[x][3]])
-
-                #print('add open node',open[-1])
-            #else:
-                #print('node',tmp[y][0], 'already exists in open or closed!')
+                # print('add open node',open[-1])
 
             if tmp[y][2] == 0:
-                # V1.0
-                #                    closed.append(open[x])
-                #                    closed.append(open[-1])
-                #                    open.remove(open[x])
-                #                    print('add close node',open[x])
-                # V1.1
                 closed.append(tmpOpen)
                 closed.append(open[0])
                 open.remove(open[0])
-                #print('add close node',open[x])
+                # print('add close node',open[x])
 
-                print('Totally', nodeid, 'nodes ayalyzed,find the result.')
+                # print('Totally', nodeid, 'nodes ayalyzed,find the result.')
                 prtResult()
-                print('Success!')
+                # print('Success!')
                 exit("We find it!")
-        # V1.0          closed.append(open[x])
-        # V1.1
         closed.append(tmpOpen)
-        #print('add close node',open[x])
-        # v1.0      open.remove(open[x])
-        # V1.1
+        # print('add close node',open[x])
         open.remove(tmpOpen)
+
 
 def addOpen(node):
     if len(open) == 0 or node[2] >= open[-1][2]:
@@ -157,12 +130,13 @@ def addOpen(node):
                 open.insert(i, node)
                 break
 
+
 # 基于输入的序列进行移动，并返回所有可能的移动后目的序列；
 # 每条数据：节点序列、前一节点序列、与目标序列偏差值、当前节点序列ID
 def move(src, side):
     global crt
     global nodeid
-    #global op
+    # global op
     pos = position(src)
     flag = pos[0]
     x = pos[1]
@@ -191,19 +165,15 @@ def move(src, side):
     if side == 'right' or side == '':
         if y < 2:
             crtRight = exchange(src, x, y, x, y + 1)
-            #        print('Can move to Right,after move result is:')
             #        prtNum(crtRight)
             rightDiff = diff(numberFinal, crtRight)
             #        print('different factor is',rightDiff)
             #        return(crtRight,src,rightDiff)
             nodeid = nodeid + 1
             rtResult.append([crtRight, src, rightDiff, nodeid])
-    #      else:
-    #        print('Cannot move to RIGHT!')
 
     if side == 'up' or side == '':
         if x > 0:
-            #        print('Can move to UP,after move result is:')
             crtUp = exchange(src, x, y, x - 1, y)
             #        prtNum(crtUp)
             upDiff = diff(numberFinal, crtUp)
@@ -211,12 +181,9 @@ def move(src, side):
             #        return(crtUp,src,upDiff)
             nodeid = nodeid + 1
             rtResult.append([crtUp, src, upDiff, nodeid])
-    #      else:
-    #        print('Cannot move to UP!')
 
     if side == 'down' or side == '':
         if x < 2:
-            #        print('Can move to DOWN,after move result is:')
             crtDown = exchange(src, x, y, x + 1, y)
             #        prtNum(crtDown)
             downDiff = diff(numberFinal, crtDown)
@@ -225,8 +192,6 @@ def move(src, side):
             nodeid = nodeid + 1
             rtResult.append([crtDown, src, downDiff, nodeid])
 
-    #      else:
-    #        print('Cannot move to DOWN!')
     if nodeid % 1000 >= 0 and nodeid % 1000 < 3:
         print(int(nodeid / 1000) * 1000, 'nodes analyzed!')
     return rtResult
@@ -250,19 +215,25 @@ def prtResult():
     for x in range(len(step)):
         print('Step', x, ':')
         prtNum(step[x][0])
-        #print(step[x][0])
+        # print(step[x][0])
         for i in range(9):
-            if(step[x][0][i] == '0'):
+            if (step[x][0][i] == '0'):
                 pos0.append(i)
-        print(pos0)
+        # print(pos0)
     for k in range(len(step)):
-        if (pos0[k+1]-pos0[k]==1):      operations = operations + 'd'
-        elif(pos0[k+1]-pos0[k]==-1):    operations = operations + 'a'
-        elif(pos0[k+1]-pos0[k]==-3):    operations = operations + 'w'
-        elif(pos0[k+1]-pos0[k]==3):     operations = operations + 's'
-        else:   operations = operations + ''
-    print('Finished!+',operations)
-    #time.sleep(10)
+        if (pos0[k + 1] - pos0[k] == 1):
+            operations = operations + 'd'
+        elif (pos0[k + 1] - pos0[k] == -1):
+            operations = operations + 'a'
+        elif (pos0[k + 1] - pos0[k] == -3):
+            operations = operations + 'w'
+        elif (pos0[k + 1] - pos0[k] == 3):
+            operations = operations + 's'
+        else:
+            operations = operations + ''
+    print('operations is:')
+    print(operations) 
+
 
 open = []
 
@@ -288,10 +259,10 @@ prtNum(numberFinal)
 
 # 如果初始和目标序列的判定值奇偶性一致，则存在解，开始处理
 if (judge(numberOrig) + judge(numberFinal)) % 2 == 0:
-    print('Have answer! Orig is ', judge(numberOrig), ', Final is', judge(numberFinal))
+    print('Have answer!')  # Orig is ', judge(numberOrig), ', Final is', judge(numberFinal))
     # 处理方式：将初始节点加入open表，开始处理。
     open.append([numberOrig, 'NULL', diff(numberOrig, numberFinal), 1, 0])
     handleOpen()
 # 否则，不存在解，直接退出。
 else:
-    print('No answer! Orig is ', judge(numberOrig), ', Final is', judge(numberFinal))
+    print('No answer!')  # Orig is ', judge(numberOrig), ', Final is', judge(numberFinal))
