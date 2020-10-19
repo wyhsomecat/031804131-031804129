@@ -5,8 +5,18 @@ from functools import reduce
 import os
 import base64
 
+
+'''
+这里是031804131的somecat，这是大比拼项目图片处理部分的代码
+请把获取的经过base64编码的图片粘贴到终端中
+程序会自动完成切割、对比、识别图像、获得对应序列的工作
+最后终端输出9位数字，请把数字复制到AI.py的终端里运行
+关于AI算法，请见AI.py
+'''
+
 # 这里的img承载了赛题方面的base64测试图像，对其解码、保存
-img = ''
+print('请输入获取的经过base64编码的图片：')
+img = input()
 imgdata = base64.b64decode(img)
 file = open('aitest.jpg', 'wb')
 file.write(imgdata)
@@ -81,11 +91,11 @@ for i in range(9):
     if (len(clrs) != 1):#如果长度不为1，即不只返回了一个列表，即图像方块内有超过一种颜色（非纯黑或纯白）
         file_names = []
         #调用已经切割好的本地图片库
-        for parent, dirnames, filenames in os.walk('D:/char/charspec'):  # 三个参数：分别返回1.父目录 2.所有文件夹名字（不含路径） 3.所有文件名字
+        for parent, dirnames, filenames in os.walk(os.getcwd()+'/charspec'):  # 三个参数：分别返回1.父目录 2.所有文件夹名字（不含路径） 3.所有文件名字
             file_names = filenames
         for k in range(315):
             #比较切割后的测试图像和本地图片库
-            if (image_contrast(imgstr, 'D:/char/charspec/' + file_names[k]) == 0):
+            if (image_contrast(imgstr, os.getcwd()+'/charspec/' + file_names[k]) == 0):
                 tempfn = file_names[k]
                 if (len(tempfn) > 8):#根据图片名称长度进行分类
                     #获取picname，即测试图像对应本地图像的名称，如A _(2)
@@ -117,14 +127,15 @@ for i in range(9):
 #在获得了测试图像对应的本地图像的名称后重新遍历本地图片库，确定纯黑块的对应位置
 for m in range(9):
     if (len(tempfn) > 8 and blackblock == True):
-        if (image_contrast("aitest" + str(tmp) + ".jpg", 'D:/char/charspec/' + tempfn[0:6] + str(m) + '.jpg') == 0):
+        if (image_contrast("aitest" + str(tmp) + ".jpg", os.getcwd()+'/charspec/' + tempfn[0:6] + str(m) + '.jpg') == 0):
             strm = str(m + 1)
             # print(strm)
             piclist = piclist.replace('t', strm)
     elif (len(tempfn) < 8 and blackblock == True):
-        if (image_contrast("aitest" + str(tmp) + ".jpg", 'D:/char/charspec/' + tempfn[0:2] + str(m) + '.jpg') == 0):
+        if (image_contrast("aitest" + str(tmp) + ".jpg", os.getcwd()+'/charspec/' + tempfn[0:2] + str(m) + '.jpg') == 0):
             strm = str(m + 1)
             # print(strm)
             piclist = piclist.replace('t', strm)
 #获得piclist，piclist表示为一个九个数字的字符串
+print('要求解的图片对应序列为：')
 print(piclist)

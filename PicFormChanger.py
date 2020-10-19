@@ -9,7 +9,3 @@ def changeJpgToPng(w, h, path):
     image.save(png_name)
     #print(png_name)
     return png_name
-#w = 300
-#h = 300
-#path = 'D:char/test.jpg'
-#changeJpgToPng(w, h, path)

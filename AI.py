@@ -1,6 +1,20 @@
 import copy
 
 
+'''
+这里是031804131的somecat，这是AI部分的代码
+正常情况下，运行后请在终端分别输入要处理的图片序列
+其中Original state是我们要求解的序列，
+来自Calculate.py 的输出内容，为一串九位数字，如123456890,其中0代表白块
+Final state是我们的目标结果，格式同上
+但是由于本算法的特殊性（A*算法由答案从后向前逆推计算），
+如果预计步数>交换步数，则无法处理交换命令，需要事先手动交换后再次进行
+关于赛题图片的处理，请见Calculate.py
+'''
+
+
+
+
 # 将一个八数码序列用3x3的阵列打印出来
 def prtNum(src):
     for x in range(3):
@@ -94,13 +108,13 @@ def handleOpen():
                 # print('open[x][0]is',open[x][0])
                 if tmp[y][0] == open[jj][0]:
                     flag = True
-                    # print('falg open set to True')
+                    # print('flag open set to True')
             for kk in range(len(closed)):
                 # print('tmp[',y,'][0]is',tmp[y][0])
                 # print('closed[',kk,'][0]is',closed[kk][0])
                 if tmp[y][0] == closed[kk][0]:
                     flag = True
-                    # print('falg close set to True')
+                    # print('flag close set to True')
             if flag == False:
                 addOpen([tmp[y][0], tmp[y][1], tmp[y][2], tmp[y][3], open[x][3]])
                 # print('add open node',open[-1])
@@ -138,13 +152,10 @@ def move(src, side):
     global nodeid
     # global op
     pos = position(src)
-    flag = pos[0]
+
     x = pos[1]
     y = pos[2]
-    leftDiff = 999
-    rightDiff = 999
-    upDiff = 999
-    downDiff = 999
+
     #    print('Node being analyzed is:')
     #    prtNum(src)
     rtResult = []
